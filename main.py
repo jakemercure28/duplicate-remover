@@ -13,8 +13,6 @@ scale_percent = 12 # percent of original size
 
 files = []
 imgs = []
-global img
-resized = []
 features = []
 kp = []
 des = []
@@ -42,20 +40,6 @@ duplicates = []
 
 #         return imgs
 
-def get_file_list(directory):
-
-        count = 0
-        for file in os.listdir(directory):
-            if(file.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp'))):
-                try:
-                    print('[ADDING FILES]', count)
-                    path = os.path.join(directory, file)
-                    files.append(path)
-                                
-                except:
-                    print("[FAILURE OPENING FILE]", path)
-                            
-                count+=1
 
 # def read_images(file):
 #     print('[READING IMAGE]', file)
@@ -138,6 +122,17 @@ def get_file_list(directory):
         #         count+=1        
                 
         # return duplicates
+
+# def detect_features(img):
+
+# #sift detection object max keypoints set globally
+#     sift = cv.SIFT_create(MAX_KEYPOINTS)
+#     print('[Detecting features]')    
+#     k,d = sift.detectAndCompute(img, None)
+
+#     return d
+
+
 def get_file_list(directory):
 
         count = 0
@@ -153,7 +148,8 @@ def get_file_list(directory):
                             
                 count+=1
                 
-def do_all(file):
+
+def compute_image(file):
     print('[Reading image]', file)
     global img
     img = cv.imread(file, cv.IMREAD_GRAYSCALE)
@@ -166,38 +162,32 @@ def do_all(file):
             height = int(img.shape[0] * scale_percent / 100)
             dim = (width, height)
             img = cv.resize(img, dim, interpolation = cv.INTER_AREA)
+            imgs.append(img)
     except:
         print('[FAILED TO RESIZE]')
 
-    return img
-
-def detect_features(img):
-
-#sift detection object max keypoints set globally
     sift = cv.SIFT_create(MAX_KEYPOINTS)
-    print('[Detecting features]')    
     k,d = sift.detectAndCompute(img, None)
 
     return d
 
-def similarity_check(resized):
+def similarity_check(d, file):
 
-        count = 0
 
-        for i1 in range(len(resized)):
-                print('[MATCHING PHOTOS]', count)
+                dup = []
+                print('[MATCHING PHOTOS]')
                 
-                for i2 in range(i1 + 1, len(resized)):
+                for i2 in range(0, len(des)):
 
                         FLANN_INDEX_KDTREE = 1
                         index_params = dict(
                                 algorithm = FLANN_INDEX_KDTREE,
                                 trees = 5
                         )
-
+                        print(file)
                         search_params = dict(checks=50)
                         flann = cv.FlannBasedMatcher(index_params, search_params)
-                        matches = flann.knnMatch(des[i1], des[i2], k=2)
+                        matches = flann.knnMatch(d, des[i2], k=2)
                         matchesCount = 0
                         
                         for i,(m,n) in enumerate(matches):
@@ -205,14 +195,14 @@ def similarity_check(resized):
                                         matchesCount += 1
 
                         if(matchesCount > MIN_MATCHES):
-                                print('[DUPLICATE FOUND]', files[i1], files[i2])
+                                
                                 # adds the lower resolution image to the deletion list
-                                h1, w1 = resized[i1].shape[:2]
-                                h2, w2 = resized[i2].shape[:2]
-                                duplicates.append(files[i2 if h1*w1 > h2*w2 else i1])
-                count+=1        
+                                # h1, w1 = img.shape[:2]
+                                # h2, w2 = imgs[i2].shape[:2]
+                                duplicate = file
+                    
                 
-        return duplicates
+                return duplicate
 
 
 def delete(duplicates):
@@ -272,20 +262,29 @@ def main():
         get_file_list(args.directory)
 
         with concurrent.futures.ProcessPoolExecutor() as executor:
-        	results = executor.map(do_all, files)
+        	results = executor.map(compute_image, files)
 
-       	for result in results:
-       		resized.append(result)
+       	# for result in results:
+       	# 	resized.append(result)
 
-       	with concurrent.futures.ProcessPoolExecutor() as executor:
-        	results = executor.map(detect_features, resized)
+       	# with concurrent.futures.ProcessPoolExecutor() as executor:
+        # 	results = executor.map(detect_features, resized)
 
        	for result in results:
        		# kp.append(k)
        		des.append(result)
 
 
-        similarity_check(resized)
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            results = executor.map(similarity_check, des, files)
+
+        for result in results:
+            duplicates.append(result)
+
+        for delete in duplicates:
+            print('[FILE DELETED] (test)', delete)
+
+        # similarity_check(des)
       
         # if args.delete:
         #         delete(duplicates)
