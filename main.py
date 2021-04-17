@@ -174,9 +174,7 @@ def compute_image(file):
 def similarity_check(d, file):
 
 
-                dup = []
                 print('[MATCHING PHOTOS]')
-                
                 for i2 in range(0, len(des)):
 
                         FLANN_INDEX_KDTREE = 1
@@ -184,25 +182,27 @@ def similarity_check(d, file):
                                 algorithm = FLANN_INDEX_KDTREE,
                                 trees = 5
                         )
-                        print(file)
+
                         search_params = dict(checks=50)
                         flann = cv.FlannBasedMatcher(index_params, search_params)
                         matches = flann.knnMatch(d, des[i2], k=2)
                         matchesCount = 0
-                        
                         for i,(m,n) in enumerate(matches):
                                 if m.distance < FEATURES_DISTANCE * n.distance:
                                         matchesCount += 1
 
                         if(matchesCount > MIN_MATCHES):
+                            return file
+                        else:
+                            return 0;
                                 
                                 # adds the lower resolution image to the deletion list
                                 # h1, w1 = img.shape[:2]
                                 # h2, w2 = imgs[i2].shape[:2]
-                                duplicate = file
+                                
                     
                 
-                return duplicate
+                
 
 
 def delete(duplicates):
@@ -274,15 +274,19 @@ def main():
        		# kp.append(k)
        		des.append(result)
 
-
+        #loop this to find all duplicates, only compares the first to all, needs to compare all to all
         with concurrent.futures.ProcessPoolExecutor() as executor:
             results = executor.map(similarity_check, des, files)
 
         for result in results:
-            duplicates.append(result)
+            if(result != 0):
+                duplicates.append(result)
+
+
+        
 
         for delete in duplicates:
-            print('[FILE DELETED] (test)', delete)
+            print('[Duplicate: ]', delete)
 
         # similarity_check(des)
       
