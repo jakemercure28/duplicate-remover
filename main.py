@@ -173,9 +173,8 @@ def compute_image(file):
 
 def similarity_check(d, file):
 
-
                 print('[MATCHING PHOTOS]')
-                for i2 in range(0, len(des)):
+                for data in range(0, len(d)):
 
                         FLANN_INDEX_KDTREE = 1
                         index_params = dict(
@@ -185,14 +184,15 @@ def similarity_check(d, file):
 
                         search_params = dict(checks=50)
                         flann = cv.FlannBasedMatcher(index_params, search_params)
-                        matches = flann.knnMatch(d, des[i2], k=2)
+                        matches = flann.knnMatch(d, des[data], k=2)
                         matchesCount = 0
                         for i,(m,n) in enumerate(matches):
                                 if m.distance < FEATURES_DISTANCE * n.distance:
                                         matchesCount += 1
 
                         if(matchesCount > MIN_MATCHES):
-                            return file
+                            return files[data]
+
                         else:
                             return 0;
                                 
@@ -274,9 +274,13 @@ def main():
        		# kp.append(k)
        		des.append(result)
 
-        #loop this to find all duplicates, only compares the first to all, needs to compare all to all
+        #  This detects the image itself and marks as duplicate needs to itterate 1 each loop
         with concurrent.futures.ProcessPoolExecutor() as executor:
             results = executor.map(similarity_check, des, files)
+
+        # with concurrent.futures.ProcessPoolExecutor() as executor:
+        #     for i in range(len(des)):
+        #         results = executor.map(similarity_check, des, files, i)
 
         for result in results:
             if(result != 0):
