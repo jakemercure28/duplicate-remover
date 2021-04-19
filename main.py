@@ -264,27 +264,17 @@ def main():
     
         start_time = time.time()
         
-
         args = argparser()
 
         get_file_list(args.directory)
 
+
         with concurrent.futures.ProcessPoolExecutor() as executor:
         	results = executor.map(compute_image, files)
 
-       	# for result in results:
-       	# 	resized.append(result)
-
-       	# with concurrent.futures.ProcessPoolExecutor() as executor:
-        # 	results = executor.map(detect_features, resized)
-
        	for result in results:
-       		# kp.append(k)
        		des.append(result)
 
-        #  This detects the image itself and marks as duplicate needs to itterate 1 each loop
-        # with concurrent.futures.ProcessPoolExecutor() as executor:
-        #     results = executor.map(similarity_check, des, files)
 
         count = 0
         for item in range(0, len(files)):
@@ -294,27 +284,13 @@ def main():
         with concurrent.futures.ProcessPoolExecutor() as executor:
                 results = executor.map(similarity_check, des, files, itr)
 
-        
         for result in results:
             for item in result:
                 if(item != 0):
                     duplicates.append(item)
-
-
-        
-
-        # similarity_check(des)
       
         if args.delete:
                 delete(duplicates)
-
-        # for f in enumerate(duplicates):
-        #     try:
-        #         shutil.move(f, 'duplicates')
-                
-        #     except:
-        #         os.remove(f)
-        #         print('[DELETED]', f)
 
                 
         print("--- %.8s seconds ---" % (time.time() - start_time))
