@@ -4,6 +4,7 @@ import argparse
 import cv2 as cv
 import time
 import concurrent.futures
+import shutil
 
 
 FEATURES_DISTANCE = 0.3
@@ -17,6 +18,7 @@ features = []
 kp = []
 des = []
 duplicates = []
+itr = []
 
 # def collect_imgs(directory):
 
@@ -171,10 +173,11 @@ def compute_image(file):
 
     return d
 
-def similarity_check(d, file):
+def similarity_check(d, file,i):
 
+                temp = []
                 print('[MATCHING PHOTOS]')
-                for data in range(0, len(d)):
+                for data in range(0 + i, len(files)):
 
                         FLANN_INDEX_KDTREE = 1
                         index_params = dict(
@@ -189,28 +192,33 @@ def similarity_check(d, file):
                         for i,(m,n) in enumerate(matches):
                                 if m.distance < FEATURES_DISTANCE * n.distance:
                                         matchesCount += 1
-
+                        
+                        itr[data] = None
                         if(matchesCount > MIN_MATCHES):
-                            return files[data]
+                            temp.append(files[data])
+                            
 
                         else:
-                            return 0;
-                                
+                            temp.append(0)                                
                                 # adds the lower resolution image to the deletion list
                                 # h1, w1 = img.shape[:2]
                                 # h2, w2 = imgs[i2].shape[:2]
                                 
                     
-                
+                return temp
                 
 
 
 def delete(duplicates):
         for count, path in enumerate(duplicates):
                 try:
+                    shutil.move(f, 'duplicates')
+                except:
+                    
+                    try:
                         os.remove(path)
                         print('[DELETED]', count)
-                except:
+                    except:
                         continue
 
 def argparser():
@@ -275,27 +283,39 @@ def main():
        		des.append(result)
 
         #  This detects the image itself and marks as duplicate needs to itterate 1 each loop
-        with concurrent.futures.ProcessPoolExecutor() as executor:
-            results = executor.map(similarity_check, des, files)
-
         # with concurrent.futures.ProcessPoolExecutor() as executor:
-        #     for i in range(len(des)):
-        #         results = executor.map(similarity_check, des, files, i)
+        #     results = executor.map(similarity_check, des, files)
 
+        count = 0
+        for item in range(0, len(files)):
+            count += 1
+            itr.append(count)
+
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+                results = executor.map(similarity_check, des, files, itr)
+
+        
         for result in results:
-            if(result != 0):
-                duplicates.append(result)
+            for item in result:
+                if(item != 0):
+                    duplicates.append(item)
 
 
         
 
-        for delete in duplicates:
-            print('[Duplicate: ]', delete)
-
         # similarity_check(des)
       
-        # if args.delete:
-        #         delete(duplicates)
+        if args.delete:
+                delete(duplicates)
+
+        # for f in enumerate(duplicates):
+        #     try:
+        #         shutil.move(f, 'duplicates')
+                
+        #     except:
+        #         os.remove(f)
+        #         print('[DELETED]', f)
+
                 
         print("--- %.8s seconds ---" % (time.time() - start_time))
 
