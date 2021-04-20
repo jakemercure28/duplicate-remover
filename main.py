@@ -206,14 +206,14 @@ def similarity_check(d, file,i):
 
 
 def delete(duplicates):
-		for count, path in enumerate(duplicates):
+		for path in duplicates:
 				try:
 					shutil.move(f, 'duplicates')
 				except:
 					
 					try:
 						os.remove(path)
-						print('[DELETED]', count)
+						print('[DELETED]', path)
 					except:
 						continue
 
