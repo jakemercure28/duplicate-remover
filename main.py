@@ -22,7 +22,7 @@ itr = []
 
 # def collect_imgs(directory):
 
-       
+	   
 #         count = 0
 #         for file in os.listdir(directory):
 #             if(file.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp'))):
@@ -33,12 +33,12 @@ itr = []
 #                     #     'f': cv.imread(path, cv.IMREAD_GRAYSCALE),
 #                     #     'p': path
 #                     # });
-                                
+								
 #                 except:
 #                     print("[FAILURE OPENING FILE]", path)
-                            
+							
 #                 count+=1
-        
+		
 
 #         return imgs
 
@@ -54,7 +54,7 @@ itr = []
 #     global resized
 #     try:
 #         h1, w1 = img.shape[:2]
-                
+				
 #         if(h1 >= 800 and w1 >= 800):
 #             width = int(img.shape[1] * scale_percent / 100)
 #             height = int(img.shape[0] * scale_percent / 100)
@@ -66,64 +66,64 @@ itr = []
 
 
 #     return img
-        #resize images to scale factor                
-        # for i1 in range(len(imgs)):
-        #         try:
-        #             h1, w1 = imgs[i1]['f'].shape[:2]
-                
-        #             if(h1 >= 800 and w1 >= 800):
-        #                     width = int(imgs[i1]['f'].shape[1] * scale_percent / 100)
-        #                     height = int(imgs[i1]['f'].shape[0] * scale_percent / 100)
-        #                     dim = (width, height)
-        #                     imgs[i1]['f'] = cv.resize(imgs[i1]['f'], dim, interpolation = cv.INTER_AREA)
-        #         except:
-        #             continue
+		#resize images to scale factor                
+		# for i1 in range(len(imgs)):
+		#         try:
+		#             h1, w1 = imgs[i1]['f'].shape[:2]
+				
+		#             if(h1 >= 800 and w1 >= 800):
+		#                     width = int(imgs[i1]['f'].shape[1] * scale_percent / 100)
+		#                     height = int(imgs[i1]['f'].shape[0] * scale_percent / 100)
+		#                     dim = (width, height)
+		#                     imgs[i1]['f'] = cv.resize(imgs[i1]['f'], dim, interpolation = cv.INTER_AREA)
+		#         except:
+		#             continue
 
-        # return imgs
-
-
-        #sift detection object max keypoints set globally
-        # sift = cv.SIFT_create(MAX_KEYPOINTS)
-        # global kp, des
-        # for count, img in enumerate(resized):
-        #         print('[SCANNING IMAGE]', count)
-        #         k, d = sift.detectAndCompute(img, None)
-        #         kp.append(k)
-        #         des.append(d)
+		# return imgs
 
 
-        # duplicates = []
-        # count = 0
+		#sift detection object max keypoints set globally
+		# sift = cv.SIFT_create(MAX_KEYPOINTS)
+		# global kp, des
+		# for count, img in enumerate(resized):
+		#         print('[SCANNING IMAGE]', count)
+		#         k, d = sift.detectAndCompute(img, None)
+		#         kp.append(k)
+		#         des.append(d)
 
-        # for i1 in range(len(imgs)):
-        #         print('[MATCHING PHOTOS]', count)
-                
-        #         for i2 in range(i1 + 1, len(imgs)):
 
-        #                 FLANN_INDEX_KDTREE = 1
-        #                 index_params = dict(
-        #                         algorithm = FLANN_INDEX_KDTREE,
-        #                         trees = 5
-        #                 )
+		# duplicates = []
+		# count = 0
 
-        #                 search_params = dict(checks=50)
-        #                 flann = cv.FlannBasedMatcher(index_params, search_params)
-        #                 matches = flann.knnMatch(imgs[i1]['des'], imgs[i2]['des'], k=2)
-        #                 matchesCount = 0
-                        
-        #                 for i,(m,n) in enumerate(matches):
-        #                         if m.distance < FEATURES_DISTANCE * n.distance:
-        #                                 matchesCount += 1
+		# for i1 in range(len(imgs)):
+		#         print('[MATCHING PHOTOS]', count)
+				
+		#         for i2 in range(i1 + 1, len(imgs)):
 
-        #                 if(matchesCount > MIN_MATCHES):
-        #                         print('[DUPLICATE FOUND]', imgs[i1]['p'], imgs[i2]['p'])
-        #                         # adds the lower resolution image to the deletion list
-        #                         h1, w1 = imgs[i1]['f'].shape[:2]
-        #                         h2, w2 = imgs[i2]['f'].shape[:2]
-        #                         duplicates.append(imgs[i2 if h1*w1 > h2*w2 else i1]['p'])
-        #         count+=1        
-                
-        # return duplicates
+		#                 FLANN_INDEX_KDTREE = 1
+		#                 index_params = dict(
+		#                         algorithm = FLANN_INDEX_KDTREE,
+		#                         trees = 5
+		#                 )
+
+		#                 search_params = dict(checks=50)
+		#                 flann = cv.FlannBasedMatcher(index_params, search_params)
+		#                 matches = flann.knnMatch(imgs[i1]['des'], imgs[i2]['des'], k=2)
+		#                 matchesCount = 0
+						
+		#                 for i,(m,n) in enumerate(matches):
+		#                         if m.distance < FEATURES_DISTANCE * n.distance:
+		#                                 matchesCount += 1
+
+		#                 if(matchesCount > MIN_MATCHES):
+		#                         print('[DUPLICATE FOUND]', imgs[i1]['p'], imgs[i2]['p'])
+		#                         # adds the lower resolution image to the deletion list
+		#                         h1, w1 = imgs[i1]['f'].shape[:2]
+		#                         h2, w2 = imgs[i2]['f'].shape[:2]
+		#                         duplicates.append(imgs[i2 if h1*w1 > h2*w2 else i1]['p'])
+		#         count+=1        
+				
+		# return duplicates
 
 # def detect_features(img):
 
@@ -137,163 +137,150 @@ itr = []
 
 def get_file_list(directory):
 
-        count = 0
-        for file in os.listdir(directory):
-            if(file.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp'))):
-                try:
-                    path = os.path.join(directory, file)
-                    files.append(path)
-                                
-                except:
-                    print("[FAILURE OPENING FILE]", path)
-                            
-                count+=1
-        print('[ADDING FILES]', count)        
+		count = 0
+		for file in os.listdir(directory):
+			if(file.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp'))):
+				try:
+					path = os.path.join(directory, file)
+					files.append(path)
+								
+				except:
+					print("[FAILURE OPENING FILE]", path)
+							
+				count+=1
+		print('[ADDING FILES]', count)        
 
 def compute_image(file):
-    global img
-    
-    try:
-        img = cv.imread(file, cv.IMREAD_GRAYSCALE)
-        h1, w1 = img.shape[:2]
-                
-        if(h1 >= 800 and w1 >= 800):
-            width = int(img.shape[1] * scale_percent / 100)
-            height = int(img.shape[0] * scale_percent / 100)
-            dim = (width, height)
-            img = cv.resize(img, dim, interpolation = cv.INTER_AREA)
-            # imgs.append(img)
+	
+	try:
+		img = cv.imread(file, cv.IMREAD_GRAYSCALE)
+		h1, w1 = img.shape[:2]
+				
+		if(h1 >= 800 and w1 >= 800):
+			width = int(img.shape[1] * scale_percent / 100)
+			height = int(img.shape[0] * scale_percent / 100)
+			dim = (width, height)
+			img = cv.resize(img, dim, interpolation = cv.INTER_AREA)
 
-        sift = cv.SIFT_create(MAX_KEYPOINTS)
-        k,d = sift.detectAndCompute(img, None)
-    except:
-        print('[FAILED TO READ IMAGE]', file)
-        return 0
-    
+		sift = cv.SIFT_create(MAX_KEYPOINTS)
+		k,d = sift.detectAndCompute(img, None)
+	except:
+		print('[FAILED TO READ IMAGE]', file)
+		return 0
+	
 
-    return d
+	return d
 
 def similarity_check(d, file,i):
-                temp = []
-                # print('[MATCHING PHOTOS]')
-                for data in range(0 + i, len(files)):
+	temp = []
+	for data in range(0 + i, len(files)):
 
-                        FLANN_INDEX_KDTREE = 1
-                        index_params = dict(
-                                algorithm = FLANN_INDEX_KDTREE,
-                                trees = 5
-                        )
+		FLANN_INDEX_KDTREE = 1
+		index_params = dict(
+			algorithm = FLANN_INDEX_KDTREE,
+			trees = 5
+		)
 
-                        search_params = dict(checks=50)
-                        flann = cv.FlannBasedMatcher(index_params, search_params)
-                        matches = flann.knnMatch(d, des[data], k=2)
-                        matchesCount = 0
-                        for i,(m,n) in enumerate(matches):
-                                if m.distance < FEATURES_DISTANCE * n.distance:
-                                        matchesCount += 1
-                        
-                        itr[data] = None
-                        if(matchesCount > MIN_MATCHES):
-                            temp.append(files[data])
-                            
+		search_params = dict(checks=50)
+		flann = cv.FlannBasedMatcher(index_params, search_params)
+		matches = flann.knnMatch(d, des[data], k=2)
+		matchesCount = 0
+		for i,(m,n) in enumerate(matches):
+			if m.distance < FEATURES_DISTANCE * n.distance:
+				matchesCount += 1
+					
+				itr[data] = None
+			if(matchesCount > MIN_MATCHES):
+				temp.append(files[data])
+							
 
-                        else:
-                            temp.append(0)                                
-                                # adds the lower resolution image to the deletion list
-                                # h1, w1 = img.shape[:2]
-                                # h2, w2 = imgs[i2].shape[:2]
-                                
-                    
-                return temp
-                
+			else:
+				temp.append(0)                                
+				# adds the lower resolution image to the deletion list
+				# h1, w1 = img.shape[:2]
+				# h2, w2 = imgs[i2].shape[:2]
+								
+					
+	return temp
+				
 
 
 def delete(duplicates):
-        for count, path in enumerate(duplicates):
-                try:
-                    shutil.move(f, 'duplicates')
-                except:
-                    
-                    try:
-                        os.remove(path)
-                        print('[DELETED]', count)
-                    except:
-                        continue
+		for count, path in enumerate(duplicates):
+				try:
+					shutil.move(f, 'duplicates')
+				except:
+					
+					try:
+						os.remove(path)
+						print('[DELETED]', count)
+					except:
+						continue
 
 def argparser():
-        """
-        Parses arguments.
+	
+		parser = argparse.ArgumentParser()
+		parser.add_argument("directory", type=str,
+				help="directory with the images")
+		parser.add_argument("-d", "--delete", action='store_true',
+				help="delete the duplicate images found with smaller res")
+		parser.add_argument("-s", "--silent", action='store_true',
+				help="quiet execution without logging")
+		parser.add_argument("-min", '--min_matches', type=int,
+				help="minimum number of matching features to accept the images as being similar")
+		parser.add_argument("-f", '--features_distance', type=float,
+				help="[0,1] - higher number results in more matching features but with less accuracy")
+		parser.add_argument("-max", '--max_keypoints', type=int,
+				help="max keypoints to mark on each photo when scanning for similarity")
+		args = parser.parse_args()
 
-        For more information run ``python main.py -h``.
+		if(args.silent):
+				sys.stdout = open(os.devnull, 'a')
+		if(args.min_matches):
+				MIN_MATCHES = args.min_matches
+		if(args.features_distance):
+				FEATURES_DISTANCE = args.features_distance
+		if(args.max_keypoints):
+				MAX_KEYPOINTS = args.max_keypoints
 
-        Returns
-        -------
-        args : dict
-                Parsed arguments
-        """
-
-        parser = argparse.ArgumentParser()
-        parser.add_argument("directory", type=str,
-                help="directory with the images")
-        parser.add_argument("-d", "--delete", action='store_true',
-                help="delete the duplicate images found with smaller res")
-        parser.add_argument("-s", "--silent", action='store_true',
-                help="quiet execution without logging")
-        parser.add_argument("-min", '--min_matches', type=int,
-                help="minimum number of matching features to accept the images as being similar")
-        parser.add_argument("-f", '--features_distance', type=float,
-                help="[0,1] - higher number results in more matching features but with less accuracy")
-        parser.add_argument("-max", '--max_keypoints', type=int,
-                help="max keypoints to mark on each photo when scanning for similarity")
-        args = parser.parse_args()
-
-        if(args.silent):
-                sys.stdout = open(os.devnull, 'a')
-        if(args.min_matches):
-                MIN_MATCHES = args.min_matches
-        if(args.features_distance):
-                FEATURES_DISTANCE = args.features_distance
-        if(args.max_keypoints):
-                MAX_KEYPOINTS = args.max_keypoints
-
-        return args
+		return args
 
 
 def main():
-    
-        start_time = time.time()
-        
-        args = argparser()
+	
+		start_time = time.time()
+		
+		args = argparser()
 
-        get_file_list(args.directory)
-
-
-        with concurrent.futures.ProcessPoolExecutor() as executor:
-        	results = executor.map(compute_image, files)
-
-       	for result in results:
-       		des.append(result)
+		get_file_list(args.directory)
 
 
-        count = 0
-        for item in range(0, len(files)):
-            count += 1
-            itr.append(count)
+		with concurrent.futures.ProcessPoolExecutor() as executor:
+			results = executor.map(compute_image, files)
 
-        with concurrent.futures.ProcessPoolExecutor() as executor:
-                results = executor.map(similarity_check, des, files, itr)
+		for result in results:
+			des.append(result)
 
-        for result in results:
-            for item in result:
-                if(item != 0):
-                    duplicates.append(item)
-      
-        if args.delete:
-                delete(duplicates)
 
-                
-        print("--- %.8s seconds ---" % (time.time() - start_time))
+		count = 0
+		for item in range(0, len(files)):
+			count += 1
+			itr.append(count)
+
+		with concurrent.futures.ProcessPoolExecutor() as executor:
+				results = executor.map(similarity_check, des, files, itr)
+
+		for result in results:
+			for item in result:
+				if(item != 0):
+					duplicates.append(item)
+	  
+		if args.delete:
+				delete(duplicates)
+
+				
+		print("--- %.8s seconds ---" % (time.time() - start_time))
 
 if __name__ == "__main__":
 
-    main()
+	main()
