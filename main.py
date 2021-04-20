@@ -141,7 +141,6 @@ def get_file_list(directory):
         for file in os.listdir(directory):
             if(file.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp'))):
                 try:
-                    print('[ADDING FILES]', count)
                     path = os.path.join(directory, file)
                     files.append(path)
                                 
@@ -149,14 +148,13 @@ def get_file_list(directory):
                     print("[FAILURE OPENING FILE]", path)
                             
                 count+=1
-                
+        print('[ADDING FILES]', count)        
 
 def compute_image(file):
-    print('[Reading image]', file)
     global img
-    img = cv.imread(file, cv.IMREAD_GRAYSCALE)
     
     try:
+        img = cv.imread(file, cv.IMREAD_GRAYSCALE)
         h1, w1 = img.shape[:2]
                 
         if(h1 >= 800 and w1 >= 800):
@@ -164,19 +162,20 @@ def compute_image(file):
             height = int(img.shape[0] * scale_percent / 100)
             dim = (width, height)
             img = cv.resize(img, dim, interpolation = cv.INTER_AREA)
-            imgs.append(img)
-    except:
-        print('[FAILED TO RESIZE]')
+            # imgs.append(img)
 
-    sift = cv.SIFT_create(MAX_KEYPOINTS)
-    k,d = sift.detectAndCompute(img, None)
+        sift = cv.SIFT_create(MAX_KEYPOINTS)
+        k,d = sift.detectAndCompute(img, None)
+    except:
+        print('[FAILED TO READ IMAGE]', file)
+        return 0
+    
 
     return d
 
 def similarity_check(d, file,i):
-
                 temp = []
-                print('[MATCHING PHOTOS]')
+                # print('[MATCHING PHOTOS]')
                 for data in range(0 + i, len(files)):
 
                         FLANN_INDEX_KDTREE = 1
