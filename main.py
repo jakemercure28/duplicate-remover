@@ -20,121 +20,6 @@ des = []
 duplicates = []
 itr = []
 
-# def collect_imgs(directory):
-
-	   
-#         count = 0
-#         for file in os.listdir(directory):
-#             if(file.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp'))):
-#                 try:
-#                     print('[ADDING IMAGES]', count)
-#                     path = os.path.join(directory, file)
-#                     # imgs.append({
-#                     #     'f': cv.imread(path, cv.IMREAD_GRAYSCALE),
-#                     #     'p': path
-#                     # });
-								
-#                 except:
-#                     print("[FAILURE OPENING FILE]", path)
-							
-#                 count+=1
-		
-
-#         return imgs
-
-
-# def read_images(file):
-#     print('[READING IMAGE]', file)
-#     global imgs
-#     imgs.append(cv.imread(file, cv.IMREAD_GRAYSCALE))
-
-# def resize_images(img):
-
-#     print('[RESIZING IMAGE]')
-#     global resized
-#     try:
-#         h1, w1 = img.shape[:2]
-				
-#         if(h1 >= 800 and w1 >= 800):
-#             width = int(img.shape[1] * scale_percent / 100)
-#             height = int(img.shape[0] * scale_percent / 100)
-#             dim = (width, height)
-#             img = cv.resize(img, dim, interpolation = cv.INTER_AREA)
-#             # resized.append(img)
-#     except:
-#         print('[FAILED TO RESIZE]')
-
-
-#     return img
-		#resize images to scale factor                
-		# for i1 in range(len(imgs)):
-		#         try:
-		#             h1, w1 = imgs[i1]['f'].shape[:2]
-				
-		#             if(h1 >= 800 and w1 >= 800):
-		#                     width = int(imgs[i1]['f'].shape[1] * scale_percent / 100)
-		#                     height = int(imgs[i1]['f'].shape[0] * scale_percent / 100)
-		#                     dim = (width, height)
-		#                     imgs[i1]['f'] = cv.resize(imgs[i1]['f'], dim, interpolation = cv.INTER_AREA)
-		#         except:
-		#             continue
-
-		# return imgs
-
-
-		#sift detection object max keypoints set globally
-		# sift = cv.SIFT_create(MAX_KEYPOINTS)
-		# global kp, des
-		# for count, img in enumerate(resized):
-		#         print('[SCANNING IMAGE]', count)
-		#         k, d = sift.detectAndCompute(img, None)
-		#         kp.append(k)
-		#         des.append(d)
-
-
-		# duplicates = []
-		# count = 0
-
-		# for i1 in range(len(imgs)):
-		#         print('[MATCHING PHOTOS]', count)
-				
-		#         for i2 in range(i1 + 1, len(imgs)):
-
-		#                 FLANN_INDEX_KDTREE = 1
-		#                 index_params = dict(
-		#                         algorithm = FLANN_INDEX_KDTREE,
-		#                         trees = 5
-		#                 )
-
-		#                 search_params = dict(checks=50)
-		#                 flann = cv.FlannBasedMatcher(index_params, search_params)
-		#                 matches = flann.knnMatch(imgs[i1]['des'], imgs[i2]['des'], k=2)
-		#                 matchesCount = 0
-						
-		#                 for i,(m,n) in enumerate(matches):
-		#                         if m.distance < FEATURES_DISTANCE * n.distance:
-		#                                 matchesCount += 1
-
-		#                 if(matchesCount > MIN_MATCHES):
-		#                         print('[DUPLICATE FOUND]', imgs[i1]['p'], imgs[i2]['p'])
-		#                         # adds the lower resolution image to the deletion list
-		#                         h1, w1 = imgs[i1]['f'].shape[:2]
-		#                         h2, w2 = imgs[i2]['f'].shape[:2]
-		#                         duplicates.append(imgs[i2 if h1*w1 > h2*w2 else i1]['p'])
-		#         count+=1        
-				
-		# return duplicates
-
-# def detect_features(img):
-
-# #sift detection object max keypoints set globally
-#     sift = cv.SIFT_create(MAX_KEYPOINTS)
-#     print('[Detecting features]')    
-#     k,d = sift.detectAndCompute(img, None)
-
-#     return d
-
-
 def get_file_list(directory):
 
 		count = 0
@@ -203,7 +88,6 @@ def similarity_check(d, file,i):
 					
 	return temp
 				
-
 
 def delete(duplicates):
 		for path in duplicates:
