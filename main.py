@@ -8,9 +8,9 @@ import shutil
 
 
 FEATURES_DISTANCE = 0.3
-MIN_MATCHES = 50
-MAX_KEYPOINTS = 100
-scale_percent = 12 # percent of original size
+MIN_MATCHES = 50 #matches found when comparing two images together
+MAX_KEYPOINTS = 100 #total keypoints on image
+scale_percent = 12 #reduces image resolution to speed up comparison
 
 files = []
 imgs = []
@@ -23,7 +23,7 @@ itr = []
 def get_file_list(directory):
 
 		count = 0
-		for file in os.listdir(directory):
+		for file in os.listdir(directory): #reads every file in the directory given, only takes the formats listed below
 			if(file.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp'))):
 				try:
 					path = os.path.join(directory, file)
@@ -38,16 +38,16 @@ def get_file_list(directory):
 def compute_image(file):
 	
 	try:
-		img = cv.imread(file, cv.IMREAD_GRAYSCALE)
-		h1, w1 = img.shape[:2]
+		img = cv.imread(file, cv.IMREAD_GRAYSCALE) #reads individual image in grayscale
+		h1, w1 = img.shape[:2] # notes the height and width of individual image
 				
-		if(h1 >= 800 and w1 >= 800):
+		if(h1 >= 800 and w1 >= 800): #reduce resolution if too large
 			width = int(img.shape[1] * scale_percent / 100)
 			height = int(img.shape[0] * scale_percent / 100)
 			dim = (width, height)
 			img = cv.resize(img, dim, interpolation = cv.INTER_AREA)
 
-		sift = cv.SIFT_create(MAX_KEYPOINTS)
+		sift = cv.SIFT_create(MAX_KEYPOINTS) #mark keypoint on image
 		k,d = sift.detectAndCompute(img, None)
 	except:
 		print('[FAILED TO READ IMAGE]', file)
@@ -67,7 +67,7 @@ def similarity_check(d, file,i):
 		)
 
 		search_params = dict(checks=50)
-		flann = cv.FlannBasedMatcher(index_params, search_params)
+		flann = cv.FlannBasedMatcher(index_params, search_params) #comparison (O-1/2)
 		matches = flann.knnMatch(d, des[data], k=2)
 		matchesCount = 0
 		for i,(m,n) in enumerate(matches):
@@ -139,7 +139,7 @@ def main():
 		get_file_list(args.directory)
 
 
-		with concurrent.futures.ProcessPoolExecutor() as executor:
+		with concurrent.futures.ProcessPoolExecutor() as executor: #reads images using all cpu threads
 			results = executor.map(compute_image, files)
 
 		for result in results:
